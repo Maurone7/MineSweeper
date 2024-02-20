@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 
-size = (30, 30)
+size = (5, 5)
 number_of_rows, number_of_columns = size
 number_of_bombs = int(number_of_rows*number_of_columns//5)
 

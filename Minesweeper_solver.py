@@ -1,7 +1,11 @@
 import numpy as np
 from update_field import number_of_columns, number_of_rows, update_cells_around_selected_cell, cell_equal_to_zero
 
-
+def click_zeros(visible_field, bomb_field):
+    for i in range(number_of_rows):
+        for j in range(number_of_columns):
+            if visible_field[i, j] == 0:
+                update_cells_around_selected_cell((i, j), bomb_field, visible_field)
 def count_bombs_around(visible_field, bomb_field):
     ones_positions = list(zip(np.where(visible_field != 0)[0], np.where(visible_field != 0)[1]))
     for position in ones_positions:
@@ -64,6 +68,7 @@ def one_bomb(visible_field, bomb_field):
     visible_field (numpy.ndarray): Updated visible_field array.
     """
     count_bombs_around(visible_field, bomb_field)
+    click_zeros(visible_field, bomb_field)
 
     '''
     for index, position in enumerate(ones_positions):

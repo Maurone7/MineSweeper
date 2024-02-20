@@ -1,7 +1,6 @@
 from create_field import number_of_rows, number_of_columns
 from update_field import update_cells_around_selected_cell, update_field
-import pygame
-import numpy as np
+import pygame; import numpy as np
 from Minesweeper_solver import one_bomb
 
 visible_field, bomb_field, starting_position = update_field()
@@ -121,15 +120,20 @@ while running:
     image_load()
     pygame.display.flip()
     finished = True
-    if list(zip(np.where(visible_field == 12)[0], np.where(visible_field == 12)[1])) == list(zip(np.where(bomb_field == 9)[0], np.where(bomb_field == 9)[1])):
+    if list(zip(np.where(visible_field == 12)[0], np.where(visible_field == 12)[1])) == list(zip(np.where(bomb_field == 9)[0], np.where(bomb_field == 9)[1])) and list(zip(np.where(visible_field == 13)[0], np.where(visible_field == 13)[1])) == []:
         finished == True
-        solve_button = pygame.Rect(((window_width - 2 * restart_button_size[0]) / 2 + 2 * restart_button_size[0]),
-                                   10, 80, 30)
-        pygame.draw.rect(window, (150, 150, 150), solve_button)
-        text = font.render("Mauro", True, (0, 0, 0))
-        text_rect = text.get_rect(center=solve_button.center)
-        window.blit(text, text_rect)
-        pygame.display.flip()
+        running = False
 
+
+finished = True
+while finished:
+    solve_button = pygame.Rect((window_width / 2 + restart_button_size[0]), 10, 100, 100)
+    pygame.draw.rect(window, (150, 150, 150), solve_button)
+    text = font.render("Mauro", True, (0, 0, 0))
+    text_rect = text.get_rect(center=solve_button.center)
+    window.blit(text, text_rect)
+    pygame.display.flip()
+    if event.type == pygame.QUIT:
+        running = False
 # Clean up pygame
 pygame.quit()
