@@ -69,9 +69,12 @@ def image_load_fun():
         for j in range(number_of_columns):
             image_load(images_dict[visible_field[j, i]])
 
+input_box1_text, input_box2_text = '', ''
 flag_positions = []
 # Game loop
 running = True
+finished = False
+
 while running:
     # Handle events
     for event in pygame.event.get():
@@ -84,7 +87,10 @@ while running:
             column_clicked = mouse_x // (playing_area_width // number_of_columns)
             if event.button == 1:  # Left mouse button
                 if restart_button.collidepoint(event.pos):
-                    visible_field, bomb_field, starting_position = update_field()
+                    if input_box1_text and input_box2_text:
+                        visible_field, bomb_field, starting_position = update_field(rows, columns)
+                    else:
+                        visible_field, bomb_field, starting_position = update_field()
 
                 elif solve_button.collidepoint(event.pos):
                     visible_field = one_bomb(visible_field, bomb_field)
@@ -117,6 +123,47 @@ while running:
                     if (row_clicked, column_clicked) in flag_positions:
                         flag_positions.remove((row_clicked, column_clicked))
 
+        # Add input boxes
+        input_box1 = pygame.Rect((window_width/20 - 40, window_height/10 - 70, 120, 30))
+        input_box2 = pygame.Rect((window_width/20 + 80, window_height/10 - 70, 120, 30))
+        pygame.draw.rect(window, (255, 255, 255), input_box1)
+        pygame.draw.rect(window, (255, 255, 255), input_box2)
+
+        # Render the text for input boxes
+        font = pygame.font.Font(None, 25)
+        text1 = font.render("# of rows:", True, (0, 0, 0))
+        text_rect1 = text1.get_rect(center=input_box1.center)
+        window.blit(text1, text_rect1)
+
+        text2 = font.render("# of columns:", True, (0, 0, 0))
+        text_rect2 = text2.get_rect(center=input_box2.center)
+        window.blit(text2, text_rect2)
+
+        # Store button
+        store_button = pygame.Rect((window_width/10 - 40, window_height/10 - 20, 60, 30))
+        pygame.draw.rect(window, (150, 150, 150), store_button)
+        text3 = font.render("Store", True, (0, 0, 0))
+        text_rect3 = text3.get_rect(center=store_button.center)
+        window.blit(text3, text_rect3)
+
+        # Check if store button is clicked
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if store_button.collidepoint(event.pos):
+                if input_box1_text and input_box2_text:
+                    # Store the values in variables
+                    rows = int(input_box1_text)
+                    columns = int(input_box2_text)
+                    try:
+                        number_of_rows = int(input_box1_text)
+                        number_of_columns = int(input_box2_text)
+                        # Update the playing area size and little rect size
+                        playing_area_size = (playing_area_width, playing_area_height) = (rect_width - 100, rect_height - 100)
+                        little_rect_size = (little_rect_width, little_rect_height) = (playing_area_width // number_of_columns, playing_area_height // number_of_rows)
+                        # Update the visible field, bomb field, and starting position
+                        visible_field, bomb_field, starting_position = update_field()
+                    except ValueError:
+                        print("Invalid input. Please enter valid numbers.")
+        
     image_load()
     pygame.display.flip()
     finished = True
@@ -125,8 +172,7 @@ while running:
         running = False
 
 
-finished = True
-while finished:
+if finished == True:
     solve_button = pygame.Rect((window_width / 2 + restart_button_size[0]), 10, 100, 100)
     pygame.draw.rect(window, (150, 150, 150), solve_button)
     text = font.render("Mauro", True, (0, 0, 0))
@@ -135,5 +181,6 @@ while finished:
     pygame.display.flip()
     if event.type == pygame.QUIT:
         running = False
+
 # Clean up pygame
 pygame.quit()

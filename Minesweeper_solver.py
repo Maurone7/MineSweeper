@@ -30,10 +30,6 @@ def count_bombs_around(visible_field, bomb_field):
             for unclicked_position in unclicked_positions_coordinate:
                 update_cells_around_selected_cell(unclicked_position, bomb_field, visible_field)
 
-'''
-        if bomb_count == visible_field[row, column]:
-            visible_field[unclicked_positions_coordinate[0], unclicked_positions_coordinate[1]] = 12
-'''
 def mark_flag(visible_field):
     ones_positions = list(zip(np.where(visible_field == 1)[0], np.where(visible_field == 1)[1]))
     for position in ones_positions:
